@@ -42,8 +42,8 @@ async function fileHead(path: string) {
 }
 
 
-if (process.argv[0] == "/usr/bin/bun") process.argv.shift();
-if (process.argv.length == 1) process.argv.push(".");
+if (process.argv[0].endsWith("bun") || process.argv[0].endsWith("node")) process.argv.shift();
+if (process.argv.length == 1) process.argv.push(process.cwd());
 
 
 function runCommand(command: string): Promise<string> {
@@ -74,6 +74,6 @@ function runCommand(command: string): Promise<string> {
             continue;
         }
 
-        console.log(line + " ".repeat(maxLineLength - line.length), "-", summary)
+        console.log(line + " ".repeat(maxLineLength - line.length), "-", summary.trim())
     }
 })();
