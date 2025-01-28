@@ -57,10 +57,10 @@ function runCommand(command: string): Promise<string> {
     let directory = process.argv.at(-1) as string;
     if (!directory?.endsWith("/")) directory += "/"
     
-    const maxLineLength = Math.max.apply(null, ls.map(line => line.length));
+    const maxLineLength = Math.max.apply(null, ls.slice(1).map(line => line.length));
 
     // for each file
-    for (let line of ls.splice(1)) {
+    for (let line of ls.slice(1)) {
         const filename = line.split(/ +/).slice(8).join(" ");
         if (!filename) continue;
 
@@ -69,7 +69,7 @@ function runCommand(command: string): Promise<string> {
         if (fileStats.isFile()) {
             summary = await prompt(FILE_PROMPT.replace("{}", filename).replace("{}", filename).replace("{}", await fileHead(directory + filename)));
         } else if (fileStats.isDirectory()) {
-            summary = await prompt(DIRECTORY_PROMPT.replace("{}", directory + filename).replace("{}", directory).replace("{}", directory + filename).replace("{}", ls.splice(0, FILE_LIST_CONTEXT).join("\n")));
+            summary = await prompt(DIRECTORY_PROMPT.replace("{}", directory + filename).replace("{}", directory).replace("{}", directory + filename).replace("{}", ls.slice(0, FILE_LIST_CONTEXT).join("\n")));
         } else {
             continue;
         }
