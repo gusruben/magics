@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 import { exec } from "child_process";
 import { ChatGPTAPI } from "chatgpt";
 import fs from "fs";
@@ -41,6 +43,7 @@ async function fileHead(path: string) {
 
 
 if (process.argv[0] == "/usr/bin/bun") process.argv.shift();
+if (process.argv.length == 1) process.argv.push(".");
 
 
 function runCommand(command: string): Promise<string> {
@@ -66,7 +69,7 @@ function runCommand(command: string): Promise<string> {
         if (fileStats.isFile()) {
             summary = await prompt(FILE_PROMPT.replace("{}", filename).replace("{}", filename).replace("{}", await fileHead(directory + filename)));
         } else if (fileStats.isDirectory()) {
-            summary = await prompt(FILE_PROMPT.replace("{}", directory + filename).replace("{}", directory).replace("{}", directory + filename).replace("{}", ls.join("\n")));
+            summary = await prompt(DIRECTORY_PROMPT.replace("{}", directory + filename).replace("{}", directory).replace("{}", directory + filename).replace("{}", ls.splice(0, FILE_LIST_CONTEXT).join("\n")));
         } else {
             continue;
         }
