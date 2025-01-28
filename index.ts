@@ -8,7 +8,9 @@ const api = new ChatGPTAPI({
 })
 
 const HEAD_SIZE = 5; // how many lines of context of a file should be passed to chatgpt
+const FILE_LIST_CONTEXT = 50; // how many lines of file/folder contents to give as context
 const FILE_PROMPT = "Summarize the purpose of `{}` as concisely as possible, in no more than 15 words. Do not give any explanation, just a short description of the file contents and usagel, for example a file called `main.py` with complex Python code should just be summarized as 'Main Python file'. The file in this case is called `{}`; here are the first 10 lines of the contents:\n{}"
+const DIRECTORY_PROMPT = "Summarize the purpose of the directory `{}` as concisely as possible, in no more than 15 words. Do not give any explanation, just a short description of the directory contents and purpose, for example a folder called `bin` with various binaries should just be summarized as 'Binaries of various purposes'. The current folder is `{}`, and the target folder to summarize is called `{}`; here are the first 50 lines of the contents:\n{}"
 
 
 async function prompt(text: string) {
@@ -49,16 +51,13 @@ function runCommand(command: string): Promise<string> {
 
 (async () => {
     const ls = (await runCommand("ls -l " + process.argv.slice(1).join(" "))).split("\n");
-    let directory = process.argv.at(-1);
+    let directory = process.argv.at(-1) as string;
     if (!directory?.endsWith("/")) directory += "/"
     
-    // "header" - just "total " + the number of files/folders
-    console.log(ls.shift());
-
     const maxLineLength = Math.max.apply(null, ls.map(line => line.length));
 
     // for each file
-    for (let line of ls) {
+    for (let line of ls.splice(1)) {
         const filename = line.split(/ +/).slice(8).join(" ");
         if (!filename) continue;
 
@@ -66,6 +65,10 @@ function runCommand(command: string): Promise<string> {
         let summary;
         if (fileStats.isFile()) {
             summary = await prompt(FILE_PROMPT.replace("{}", filename).replace("{}", filename).replace("{}", await fileHead(directory + filename)));
+        } else if (fileStats.isDirectory()) {
+            summary = await prompt(FILE_PROMPT.replace("{}", directory + filename).replace("{}", directory).replace("{}", directory + filename).replace("{}", ls.join("\n")));
+        } else {
+            continue;
         }
 
         console.log(line + " ".repeat(maxLineLength - line.length), "-", summary)
