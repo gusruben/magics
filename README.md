@@ -33,6 +33,6 @@ drwxr-xr-x 62 gusruben users  4096 Jan 27 23:21 node_modules  - A list of depend
 
 ### Demo 📺
 
-![Magics demo](https://github.com/gusruben/magics/blob/main/magics.gif?raw=true)
+![Magics demo](https://raw.githubusercontent.com/gusruben/magics/refs/heads/main/magics.gif)
 
 > GIF not displaying properly? Try viewing the file ![here](https://github.com/gusruben/magics/blob/main/magics.gif). 
