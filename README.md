@@ -1,7 +1,6 @@
+# Magics ✨
 
-# `magics`
-
-Magics is an AI-powered extension of `ls`-- at a glance you can get an idea of the more complex purpose of files and directories. It's powered by Anthropic's Claude in the backend, and it gets context on relevant files and directories to make smart summaries of what you're looking at. 
+Magics is an AI-powered extension of `ls`-- at a glance you can get an idea of the more complex purpose of files and directories. It's powered by OpenAI ChatGPT in the backend, and it gets context on relevant files and directories to make smart summaries of what you're looking at. 
 
 ## Installation 🚀
 
@@ -12,7 +11,12 @@ npm install -g magics-ls
 
 ## Usage 🔧
 
-Just run `ms` to list the contents of the current directory along with helpful summaries.
+To use Magics, set your OpenAI API key as such:
+```
+export OPENAI_API_KEY=sk-proj-...
+```
+
+Then, just run `ms` to list the contents of the current directory along with helpful summaries.
 
 ### Example 🗒️
 
